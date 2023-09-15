@@ -14,8 +14,6 @@ jobs:
   docker:
     runs-on: ubuntu-latest
     steps:
-      - name: Debug
-        run: echo ${{ env.TEST_TAG }}
       - name: Checkout
         uses: actions/checkout@v4
       - name: Set up QEMU
@@ -33,6 +31,8 @@ jobs:
           context: .
           load: true
           tags: ${{ env.TEST_TAG }}
+      - name: Debug
+        run: docker images
       - name: Test
         run: |
           docker exec -e TEST_VAR=1 ${{ env.TEST_TAG }} test.sh
