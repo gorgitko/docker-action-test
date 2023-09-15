@@ -1,2 +1,2 @@
 FROM ubuntu
-ADD test.sh
+ADD test.sh /test.sh
