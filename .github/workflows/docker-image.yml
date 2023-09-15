@@ -31,11 +31,9 @@ jobs:
           context: .
           load: true
           tags: ${{ env.TEST_TAG }}
-      - name: Debug
-        run: ls -al
       - name: Test
         run: |
-          docker run -e TEST_VAR=1 ${{ env.TEST_TAG }} /test.sh
+          docker run -e TEST_VAR=1 ${{ env.TEST_TAG }} sh /test.sh
       - name: Build and push
         uses: docker/build-push-action@v5
         with:
