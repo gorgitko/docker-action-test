@@ -7,8 +7,8 @@ on:
     branches: [ "main" ]
 
 env:
-  TEST_TAG: gorgitko/docker-action-test:test
-  LATEST_TAG: gorgitko/docker-action-test:latest
+  TEST_TAG: jirinovo/docker-action-test:test
+  LATEST_TAG: jirinovo/docker-action-test:latest
 
 jobs:
   docker:
