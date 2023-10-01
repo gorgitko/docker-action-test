@@ -37,7 +37,7 @@ jobs:
           load: true
           tags: ${{ env.IMAGE }}:${{ env.TEST_TAG }}
       - name: Test
-        run: docker run -e TEST_VAR=1 ${{ env.IMAGE }}:${{ env.TEST_TAG }} sh /test.sh
+        run: docker run --rm -e TEST_VAR=1 ${{ env.IMAGE }}:${{ env.TEST_TAG }} sh /test.sh
       - name: Remove test image
         run: docker rmi ${{ env.IMAGE }}:${{ env.TEST_TAG }}
       - name: Docker meta
