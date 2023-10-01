@@ -48,13 +48,14 @@ jobs:
           images: ${{ env.IMAGE }}
           # generate Docker tags based on the following events/attributes
           tags: |
-            type=schedule
+            type=raw,value=latest,enable=${{ github.ref == format('refs/heads/{0}', 'main') }}
+            # type=schedule
             type=ref,event=branch
             type=ref,event=pr
             type=semver,pattern={{version}}
             type=semver,pattern={{major}}.{{minor}}
             type=semver,pattern={{major}}
-            type=sha
+            # type=sha
       - name: Build and push
         uses: docker/build-push-action@v5
         with:
