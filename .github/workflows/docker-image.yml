@@ -22,7 +22,7 @@ jobs:
           echo "github.ref -> ${{ github.ref }}"
           echo "github.ref_type -> ${{ github.ref_type }}"
       - name: Set test image name
-        run: echo "TEST_IMAGE=${{ env.IMAGE }}/$ {{ env.TEST_TAG }}" >> $GITHUB_ENV
+        run: echo "TEST_IMAGE=${{ env.IMAGE }}/${{ env.TEST_TAG }}" >> $GITHUB_ENV
       - name: Docker meta
         id: meta
         uses: docker/metadata-action@v5
