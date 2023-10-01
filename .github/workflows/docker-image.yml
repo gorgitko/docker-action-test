@@ -21,21 +21,6 @@ jobs:
         run: |
           echo "github.ref -> ${{ github.ref }}"
           echo "github.ref_type -> ${{ github.ref_type }}"
-      - name: Docker meta
-        id: meta
-        uses: docker/metadata-action@v5
-        with:
-          # list of Docker images to use as base name for tags
-          images: ${{ env.IMAGE }}
-          # generate Docker tags based on the following events/attributes
-          tags: |
-            type=schedule
-            type=ref,event=branch
-            type=ref,event=pr
-            type=semver,pattern={{version}}
-            type=semver,pattern={{major}}.{{minor}}
-            type=semver,pattern={{major}}
-            type=sha
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v3
       - name: Set up Docker Buildx
@@ -54,6 +39,21 @@ jobs:
       - name: Test
         run: |
           docker run -e TEST_VAR=1 ${{ env.IMAGE }}:${{ env.TEST_TAG }} sh /test.sh
+      - name: Docker meta
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          # list of Docker images to use as base name for tags
+          images: ${{ env.IMAGE }}
+          # generate Docker tags based on the following events/attributes
+          tags: |
+            type=schedule
+            type=ref,event=branch
+            type=ref,event=pr
+            type=semver,pattern={{version}}
+            type=semver,pattern={{major}}.{{minor}}
+            type=semver,pattern={{major}}
+            type=sha
       - name: Build and push
         uses: docker/build-push-action@v5
         with:
