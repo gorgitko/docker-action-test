@@ -5,6 +5,8 @@ on:
     branches: [ "*" ]
   pull_request:
     branches: [ "main" ]
+  release:
+    branches: [ "main" ]
 
 env:
   IMAGE: jirinovo/docker-action-test
