@@ -67,7 +67,7 @@ jobs:
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
       - name: Rollback release
-        if: failure() && steps.create_release.outputs.id != ''
+        if: github.event_name == 'release' && failure()
         uses: author/action-rollback@stable
         with:
           tag: ${{ github.event.release.tag_name }}
