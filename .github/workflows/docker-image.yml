@@ -18,17 +18,17 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+      - name: Debug
+        run: |
+          echo "github.ref -> ${{ github.ref }}"
+          echo "github.ref_type -> ${{ github.ref_type }}"
       - name: Check tag matches package version in DESCRIPTION
         if: github.event_name == 'release'
         run: |
           pkg_version="$(grep -P '^Version: \d+\.\d+\.\d+$' DESCRIPTION | cut -d' ' -f2)"
           echo "pkg_version: $pkg_version"
           test -n "$pkg_version" || (echo "'Version:' not found in DESCRIPTION" && false)
-          test "v$pkg_version" = ${{ github.ref }} || (echo "'Version:' in DESCRIPTION does not match current git tag" && false)
-      - name: Debug
-        run: |
-          echo "github.ref -> ${{ github.ref }}"
-          echo "github.ref_type -> ${{ github.ref_type }}"
+          test "v$pkg_version" = ${{ github.ref }} || (echo "'Version: $pkg_version' in DESCRIPTION does not match current git tag" && false)
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v3
       - name: Set up Docker Buildx
