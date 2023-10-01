@@ -7,8 +7,9 @@ on:
     branches: [ "main" ]
 
 env:
-  TEST_TAG: jirinovo/docker-action-test:test
-  LATEST_TAG: jirinovo/docker-action-test:latest
+  IMAGE: jirinovo/docker-action-test
+  TEST_TAG: test
+  # LATEST_TAG: jirinovo/docker-action-test:latest
 
 jobs:
   docker:
@@ -16,6 +17,27 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+      - name: Debug
+        run: |
+          echo "github.ref -> ${{ github.ref }}"
+          echo "github.ref_type -> ${{ github.ref_type }}"
+      - name: Set test image name
+        run: echo "TEST_IMAGE=${{ env.IMAGE }}/$ {{ env.TEST_TAG }}" >> $GITHUB_ENV
+      - name: Docker meta
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          # list of Docker images to use as base name for tags
+          images: ${{ env.IMAGE }}
+          # generate Docker tags based on the following events/attributes
+          tags: |
+            type=schedule
+            type=ref,event=branch
+            type=ref,event=pr
+            type=semver,pattern={{version}}
+            type=semver,pattern={{major}}.{{minor}}
+            type=semver,pattern={{major}}
+            type=sha
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v3
       - name: Set up Docker Buildx
@@ -30,14 +52,14 @@ jobs:
         with:
           context: .
           load: true
-          tags: ${{ env.TEST_TAG }}
+          tags: ${{ env.IMAGE }}/${{ env.TEST_TAG }}
       - name: Test
         run: |
-          docker run -e TEST_VAR=1 ${{ env.TEST_TAG }} sh /test.sh
+          docker run -e TEST_VAR=1 $TEST_IMAGE sh /test.sh
       - name: Build and push
         uses: docker/build-push-action@v5
         with:
           context: .
-          platforms: linux/amd64
-          push: true
-          tags: ${{ env.LATEST_TAG }}
+          push: ${{ github.event_name != 'pull_request' }}
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
