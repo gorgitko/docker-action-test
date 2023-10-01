@@ -21,8 +21,6 @@ jobs:
         run: |
           echo "github.ref -> ${{ github.ref }}"
           echo "github.ref_type -> ${{ github.ref_type }}"
-      - name: Set test image name
-        run: echo "TEST_IMAGE=${{ env.IMAGE }}:${{ env.TEST_TAG }}" >> $GITHUB_ENV
       - name: Docker meta
         id: meta
         uses: docker/metadata-action@v5
@@ -52,10 +50,10 @@ jobs:
         with:
           context: .
           load: true
-          tags: ${{ env.IMAGE }}/${{ env.TEST_TAG }}
+          tags: ${{ env.IMAGE }}:${{ env.TEST_TAG }}
       - name: Test
         run: |
-          docker run -e TEST_VAR=1 $TEST_IMAGE sh /test.sh
+          docker run -e TEST_VAR=1 ${{ env.IMAGE }}:${{ env.TEST_TAG }} sh /test.sh
       - name: Build and push
         uses: docker/build-push-action@v5
         with:
