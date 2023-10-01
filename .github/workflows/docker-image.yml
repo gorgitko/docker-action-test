@@ -23,6 +23,7 @@ jobs:
           echo "github.ref -> ${{ github.ref }}"
           echo "github.ref_type -> ${{ github.ref_type }}"
           echo "github.ref_name -> ${{ github.ref_name }}"
+          echo "github.event.release.tag_name -> ${{ github.event.release.tag_name }}
       - name: Check tag matches package version in DESCRIPTION
         if: github.event_name == 'release'
         run: |
